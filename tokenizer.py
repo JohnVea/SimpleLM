@@ -22,8 +22,8 @@ class Tokenizer:
                 break
             if(word not in self.vocabulary):
                 self.vocabulary[word] = len(self.vocabulary)
-                print(self.vocabulary)
-                print(len(self.vocabulary))
+                # print(self.vocabulary)
+                # print(len(self.vocabulary))
         
         # print(self.vocabulary)
         # print()
@@ -55,6 +55,7 @@ class Tokenizer:
             #print(max(tempPair, key=tempPair.get))
             k = 0
             # print("lenght of tempPair: ", len(tempPair))
+            addedCount = 0
             for k in range(len(tempPair)):
                 #print(max(tempPair, key=tempPair.get))
                 if(tempPair[max(tempPair, key=tempPair.get)] > 1):
@@ -62,22 +63,28 @@ class Tokenizer:
                     if(len(max(tempPair, key=tempPair.get)) > 1 and max(tempPair, key=tempPair.get) not in self.vocabulary):
                         print(len(self.vocabulary))
                         self.vocabulary[max(tempPair, key=tempPair.get)] = len(self.vocabulary)
+                        addedCount += 1
                 elif(len(max(tempPair, key=tempPair.get)) == 1 and max(tempPair, key=tempPair.get) not in self.vocabulary):
                     self.vocabulary[max(tempPair, key=tempPair.get)] = len(self.vocabulary)
+                    addedCount += 1
                 # print("k: ", k)
                 del tempPair[max(tempPair, key=tempPair.get)]
                 k+= 1
+                if tempPair and (addedCount >= 50000 or len(max(tempPair, key=tempPair.get)) >= 8):
+                    print(list(tempPair.items())[:5])
+                    break
             i = 0
             
-            if(j >= len(vocabulary)):
+            if(j >= len(vocabulary) or len(self.vocabulary) >= self.vocabSize):
                 break
 
 
 
-        print()
-        print(self.vocabulary)
+        # print()
+        # print(self.vocabulary)
         # # print()
-        # print("Updated Vocabulary: ", vocabulary)
+        print("Updated Vocabulary: ", vocabulary)
+        print("Vocabulary Size: ", len(self.vocabulary))
 
     def encode(self, text):
         encoded = []
@@ -146,12 +153,12 @@ class Tokenizer:
 
 
 
-tokenizer = Tokenizer(vocabulary="low lowest John the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one Smith Johnson Williams Brown Jones Garcia Miller Davis Rodriguez Wilson James John Robert Michael David William Richard Joseph Mary Patricia Jennifer Linda Elizabeth Barbara Susan Margaret\n Over hill, over dale, Thorough bush, thorough brier, Over park, over pale, Thorough flood, thorough fire! I do wander everywhere, Swifter than the moon's sphere; And I serve the Fairy Queen, To dew her orbs upon the green; The cowslips tall her pensioners be; In their gold coats spots you see; Those be rubies, fairy favours; In those freckles live their savours; I must go seek some dewdrops here, And hang a pearl in every cowslip's ear.", vocabSize=728)
+# tokenizer = Tokenizer(vocabulary="low lowest John the be to of and a in that have I it for not on with he as you do at this but his by from they we say her she or an will my one Smith Johnson Williams Brown Jones Garcia Miller Davis Rodriguez Wilson James John Robert Michael David William Richard Joseph Mary Patricia Jennifer Linda Elizabeth Barbara Susan Margaret\n Over hill, over dale, Thorough bush, thorough brier, Over park, over pale, Thorough flood, thorough fire! I do wander everywhere, Swifter than the moon's sphere; And I serve the Fairy Queen, To dew her orbs upon the green; The cowslips tall her pensioners be; In their gold coats spots you see; Those be rubies, fairy favours; In those freckles live their savours; I must go seek some dewdrops here, And hang a pearl in every cowslip's ear.", vocabSize=728)
 
-lowwjohn = tokenizer.encode("low w john is cool And I Built this thing wi bonsoir  merçi<PAD>")
+# lowwjohn = tokenizer.encode("low w john is cool And I Built this thing wi bonsoir  merçi<PAD>")
 
-print("Decoded: " + tokenizer.decode(lowwjohn))
+# print("Decoded: " + tokenizer.decode(lowwjohn))
 
-print()
-print("Vocabulary Size: ", len(tokenizer.vocabulary))
-print("Vocabulary: ", tokenizer.vocabulary)
+# print()
+# print("Vocabulary Size: ", len(tokenizer.vocabulary))
+# print("Vocabulary: ", tokenizer.vocabulary)
