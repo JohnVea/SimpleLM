@@ -10,7 +10,7 @@ with open("sentences.txt", "r") as file:
 file.close()
 print("Number of sentences: ", len(sentences))
 for i in range(len(sentences)):
-    sentences[i] = sentences[i].strip()  # Remove leading/trailing whitespace
+    sentences[i] = sentences[i].strip()  # Removes leading and trailing whitespaces
 
 dictio = ""
 for line in sentences:
@@ -85,8 +85,8 @@ print("Embedding Matrix: \n", embedding_matrix)
 
 
 learning_rate = 0.1
-epochs = 50000 
-decay_rate = 0.95 
+epochs = 1000 
+decay_rate = 0.90 
 
 def softmax(x):
     x = x - np.max(x)
@@ -132,7 +132,7 @@ for epoch in range(epochs):
         embedding_matrix[context_token] -= learning_rate * grad_context
 
     avg_loss = total_loss / len(X)
-    learning_rate = learning_rate * (decay_rate ** (epoch // 1000))
+    learning_rate = learning_rate * (decay_rate ** (epoch // 100))
     print(f"Epoch {epoch+1}, Average Loss: {avg_loss:.4f}")
 
 np.save("embeddingMatrixLookup.npy", embedding_matrix)  # Save embedding matrix 
