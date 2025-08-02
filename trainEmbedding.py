@@ -64,7 +64,7 @@ def cross_entropy(predicted, target_index):
     return -np.log(predicted[target_index] + 1e-9)
 
 
-learning_rate = 0.9
+learning_rate = 0.6
 epochs = 10 
 decay_rate = 0.90 
 

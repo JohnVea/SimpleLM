@@ -14,35 +14,41 @@ embeddingMatrix = np.load("embeddingMatrixLookup.npy")  # Load the embedding mat
 
 Model = Transformer(embeddingMatrix)
 
-for k in range(10):
-    for epoch in range(1):
-        total_loss = 0
-        for sentence in wikiSentences:
-            # sentence = tokenizer.encode(sentence.strip())
-            sentence = sentence.strip()
-            if (len(sentence) < 500):
-                print("Sentence: ", sentence)
-                combinedSentence = ""
-                for i in range(len(sentence.strip().split())-1):
-                    combinedSentence += sentence.strip().split()[i] + " "
-                    # print(combinedSentence)
-                    outputWord = sentence.strip().split()[i+1] + " "
-                    # print(outputWord)
-                    if(len(tokenizer.encode(outputWord)) > len(tokenizer.encode(combinedSentence))):
-                        for charcter in outputWord:
-                            Charc = charcter
-                            total_loss += Model.train(tokenizer.encode(combinedSentence), tokenizer.encode(charcter))
-                            combinedSentence += charcter
-                        # combinedSentence += charcter + " "
-                    else:
-                        total_loss += Model.train(tokenizer.encode(combinedSentence), tokenizer.encode(outputWord))
-                combinedSentence += sentence.strip().split()[-1] + " "
+learning_rate = 0.1
+epochs = 3
+for epoch in range(epochs):
+    count = 0
+    total_loss = 0
+    for sentence in wikiSentences:
+        # sentence = tokenizer.encode(sentence.strip())
+        sentence = sentence.strip()
+        if (len(sentence) < 500):
+            count += 1
+            # print("Sentence: ", sentence)
+            print("Sentence: ", sentence)
+            combinedSentence = ""
+            for i in range(len(sentence.strip().split())-1):
+                combinedSentence += sentence.strip().split()[i] + " "
                 # print(combinedSentence)
-            if(len(sentence) < 30 or len(sentence) > 450):
-                break
+                outputWord = sentence.strip().split()[i+1] + " "
+                # print(outputWord)
+                if(len(tokenizer.encode(outputWord)) > len(tokenizer.encode(combinedSentence))):
+                    for charcter in outputWord:
+                        Charc = charcter
+                        total_loss += Model.train(tokenizer.encode(combinedSentence), tokenizer.encode(charcter), learning_rate)
+                        combinedSentence += charcter
+                    # combinedSentence += charcter + " "
+                else:
+                    total_loss += Model.train(tokenizer.encode(combinedSentence), tokenizer.encode(outputWord), learning_rate)
+            combinedSentence += sentence.strip().split()[-1] + " "
+            # print(combinedSentence)
+        if(len(sentence) < 40 or len(sentence) > 400):
+            break
+    learning_rate *= 0.1  # Decay learning rate
 
-        average_loss = total_loss / len(wikiSentences)
-        print(f"Epoch {epoch + 1}, Average Loss: {average_loss:.4f}")
+    # average_loss = total_loss / len(wikiSentences)
+    average_loss = total_loss / count
+    print(f"Epoch {epoch + 1}, Average Loss: {average_loss:.4f}")
 
 
 
